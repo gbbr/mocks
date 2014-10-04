@@ -17,7 +17,7 @@ type Conn struct {
 	Incoming bytes.Buffer
 
 	// Outgoing messages will be read from this buffer
-	Outgoing bytes.Buffer
+	Outgoing *bytes.Buffer
 }
 
 func (c *Conn) Read(b []byte) (n int, err error) {

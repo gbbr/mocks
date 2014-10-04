@@ -28,7 +28,7 @@ func Test_Conn_Incoming_Buffer(t *testing.T) {
 func Test_Conn_Outgoing_Buffer(t *testing.T) {
 	var contents = new(string)
 	mockConn := &Conn{
-		Outgoing: *(bytes.NewBuffer([]byte("Test\n"))),
+		Outgoing: bytes.NewBuffer([]byte("Test\n")),
 	}
 
 	fmt.Fscanln(mockConn, contents)
