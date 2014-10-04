@@ -54,4 +54,4 @@ type Conn struct {
 
 ### Considerations
 
-If you do not wish to to create the above examples (ie. you do not need to fake the remote/local address), you may also consider using the [pipe](http://golang.org/pkg/net/#Pipe) provided in the `net` package, which returns two ends of a network stream.
+If you do not wish to to create the above examples (ie. you do not need to fake the remote/local address), you may also consider using the [pipe](http://golang.org/pkg/net/#Pipe) provided in the `net` package, which returns two ends of a network stream. _Careful though_, when using net.Pipe() and requesting LocalAddr() or RemoteAddr() nil pointer panic will happen.
