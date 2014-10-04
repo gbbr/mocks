@@ -19,6 +19,9 @@ var conn net.Conn = &mock.Conn{
 
 fmt.Println(conn.LocalAddr())            // 1.2.3.4:567
 fmt.Println(conn.RemoteAddr().Network()) // udp
+
+fmt.Fprintln(conn, "Message")
+fmt.Println(conn.Incoming.String()) // Outputs: Message\n
 ```
 
 Using a `net/textproto` wrapper is as easy as:
