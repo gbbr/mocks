@@ -1,5 +1,4 @@
-Go Mocks
-========
+## Go Mocks
 
 A collection of mocks for testing Go applications.
 
