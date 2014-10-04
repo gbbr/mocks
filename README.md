@@ -49,3 +49,7 @@ type Conn struct {
 	Outgoing *bytes.Buffer
 }
 ```
+
+### Considerations
+
+If you do not wish to to create the above examples, you may also consider using the [pipe](http://golang.org/pkg/net/#Pipe) provided in the `net` package, which returns two ends of a network stream.
