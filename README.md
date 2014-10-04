@@ -5,7 +5,7 @@ A collection of mocks for testing Go applications.
 
 ### Usage
 
-Mocking `net.Conn` has never been easier. Easily fake your Local & Remote IP address and protocol, channel incoming and outgoing stream of data as desired.
+Mocking `net.Conn` has never been easier. Fake your Local & Remote IP address and protocol, channel incoming and outgoing stream of data as desired.
 
 To fake your address & protocol:
 
