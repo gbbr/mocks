@@ -42,7 +42,7 @@ type Conn struct {
 	// Remote network & address for the connection
 	RemoteNetwork, RemoteAddress string
 
-	// Incoing messages will be written to this buffer
+	// Incoming messages will be written to this buffer
 	Incoming bytes.Buffer
 
 	// Outgoing messages will be read from this buffer
