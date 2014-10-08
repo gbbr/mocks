@@ -1,0 +1,123 @@
+
+Mocking in Go: Using interfaces for fun and profits
+
+10 Oct 2014
+
+Gabriel Aszalos
+Gopher, Freelancer
+@gabrielaszalos
+gabriel.aszalos@gmail.com
+http://github.com/gbbr
+
+* Best practices
+
+- Readability
+- Testability
+- Isolation
+- Decoupling
+
+* Benefits
+
+- Scalability
+- Perspective
+- Coverage
+- Stability and security
+
+* Gomez mailing exchange server
+
+- SMTP receives mail
+- MTA (Mail Transfer Agent) delivers mail
+- POP3 retrieves mail
+- Optional: JSON API
+- Optional: CLI
+
+* Mailbox
+
+Example implementation:
+
+	type Mailbox interface {
+		// Queues a message for delivery
+		Queue(msg *mail.Message) error
+
+		// Delivers a message to a users inbox
+		Deliver(msg *mail.Message, addr *mail.Address) error
+
+		// Retrieves a user’s messages
+		Inbox(usr User) []*mail.Message
+
+		// Queries the mailbox for a user
+		Query(addr *mail.Address) QueryStatus
+	}
+
+* Multiple implementations
+
+- PostBox - PostgreSQL implementation
+- RedBox - Redis implementation
+- MongoBox - MongoDB implementation
+
+* Mocking a mailbox
+
+	type MockMailbox struct {
+		Queue_(msg *mail.Message) error
+		Deliver_(msg *mail.Message, addr *mail.Address) error
+		Inbox_(usr User) []*mail.Message
+		Query_(addr *mail.Address) QueryStatus	
+	}
+
+	var _ Mailbox = new(MockMailbox)
+
+	func (m *MockMailbox) Queue(msg *mail.Message) error {
+		return m.Queue_(msg)
+	}
+
+	func (m *MockMailbox) Deliver(msg *mail.Message, addr *mail.Address) error {
+		return m.Deliver_(msg, addr)
+	}
+
+	func (m *MockMailbox) Inbox(usr User) []*mailMessage {
+		return m.Inbox_(usr)
+	}
+
+	func (m *MockMailbox) Query(addr *mail.Address) QueryStatus {
+		return m.Query_(addr)
+	}
+
+* Faking a network address
+
+- net.Addr is an interface
+
+	type Addr struct {
+		Net, Addr string
+	}
+
+	func (m Addr) Network() string { return m.Net }
+	func (m Addr) String() string { return m.Addr }
+
+* Faking a network connection
+
+- A network connection (net.Conn) is an interface
+
+	type MockConn {
+		LocalNet, LocalAddr string
+		RemoteNet, RemoteAddr string
+		Incoming, Outgoing *bytes.Buffer
+	}
+
+	func (c *Conn) Read(b []byte) (n int, err error) { return c.Outgoing.Read(b) }
+	func (c *Conn) Write(b []byte) (n int, err error) { return c.Incoming.Write(b) }
+
+	func (c Conn) LocalAddr() net.Addr {
+		return &Addr{c.LocalNetwork, c.LocalAddress}
+	}
+
+	func (c Conn) RemoteAddr() net.Addr {
+		return &Addr{c.RemoteNetwork, c.RemoteAddress}
+	}
+
+	func (c Conn) Close() error                       { return nil }
+	func (c Conn) SetDeadline(t time.Time) error      { return nil }
+	func (c Conn) SetReadDeadline(t time.Time) error  { return nil }
+	func (c Conn) SetWriteDeadline(t time.Time) error { return nil }
+
+
+* Faking time
