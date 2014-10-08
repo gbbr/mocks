@@ -76,6 +76,31 @@ Central pivot of the mail exchange server. Queues, retrieves and delivers messag
 		return m.DeliverFn(msg, addr)
 	}
 
+* Simple example
+
+	func SaveMessage(mb Mailbox, msg *mail.Message) error {
+		return mb.Queue(msg)	
+	}
+
+Test
+
+	func Test_Save_Message(t *testing.T) {
+		called := false
+
+		mock := &MockMailbox{
+			QueueFn: func(*mail.Message) error {
+				called = true
+				return nil
+			}
+		}
+
+		SaveMessage(mock, &mail.Message{})
+
+		if !called {
+			t.Error("Did not call mailbox's Queue")
+		}
+	}
+
 * Faking a network address
 
 - net.Addr is an interface (golang.org/pkg/net/#Addr) that implements two methods.
@@ -112,9 +137,6 @@ Central pivot of the mail exchange server. Queues, retrieves and delivers messag
 	func (c Conn) SetDeadline(t time.Time) error      { return nil }
 	func (c Conn) SetReadDeadline(t time.Time) error  { return nil }
 	func (c Conn) SetWriteDeadline(t time.Time) error { return nil }
-
-
-* Faking time
 
 * Ensuring interfaces are implemented
 
