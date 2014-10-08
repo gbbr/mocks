@@ -17,9 +17,9 @@ http://github.com/gbbr
 
 * Benefits of focusing on testability
 
-- Scalability - isolated components are easy to scale independently.
-- User Perspective - view things from the other side of the fence.
-- Code Coverage - ensures integrity.
+- Scalability 
+- User Perspective
+- Code Coverage
 - Stability and Security
 
 * Mailing exchange server (Gomez)
