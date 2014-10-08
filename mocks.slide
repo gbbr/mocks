@@ -12,7 +12,7 @@ http://github.com/gbbr
 * Makes me a happy gopher
 
 - Readability
-- Testability (isolation & decoupling)
+- Isolation & Decoupling
 - Efficiency
 
 * Benefits of focusing on testability
