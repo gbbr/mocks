@@ -49,17 +49,17 @@ Central pivot of the mail exchange server. Queues, retrieves and delivers messag
 * Mocking a mailbox
 
 	type MockMailbox struct {
-		QueueFn    func(msg *mail.Message) error
-		DequeueFn  func() (*mail.Message, error)
-		DeliverFn  func(msg *mail.Message, addr *mail.Address) error
-		RetrieveFn func(usr User) []*mail.Message
-		QueryFn    func(addr *mail.Address) QueryStatus	
+		QueueMock    func(msg *mail.Message) error
+		DequeueMock  func() (*mail.Message, error)
+		DeliverMock  func(msg *mail.Message, addr *mail.Address) error
+		RetrieveMock func(usr User) []*mail.Message
+		QueryMock    func(addr *mail.Address) QueryStatus
 	}
 
-	func (m *MockMailbox) Queue(msg *mail.Message) error        { return m.QueueFn(msg)    }
-	func (m *MockMailbox) Dequeue() (*mail.Message, error)      { return m.DequeueFn()     }
-	func (m *MockMailbox) Retrieve(usr User) []*mailMessage     { return m.RetrieveFn(usr) }
-	func (m *MockMailbox) Query(addr *mail.Address) QueryStatus { return m.QueryFn(addr)   }
+	func (m *MockMailbox) Queue(msg *mail.Message) error        { return m.QueueMock(msg)    }
+	func (m *MockMailbox) Dequeue() (*mail.Message, error)      { return m.DequeueMock()     }
+	func (m *MockMailbox) Retrieve(usr User) []*mailMessage     { return m.RetrieveMock(usr) }
+	func (m *MockMailbox) Query(addr *mail.Address) QueryStatus { return m.QueryMock(addr)   }
 
 	func (m *MockMailbox) Deliver(msg *mail.Message, addr *mail.Address) error {
 		return m.DeliverFn(msg, addr)
