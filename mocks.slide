@@ -11,12 +11,6 @@ http://github.com/gbbr
 
 gabriel.aszalos@gmail.com
 
-* Makes me a happy gopher
-
-- Readability
-- Testability
-- Efficiency
-
 * Mailing exchange server (Gomez)
 
 - SMTP receives mail
@@ -95,43 +89,6 @@ Test
 			t.Error("Did not call mailbox's Queue")
 		}
 	}
-
-* Faking a network address
-
-- net.Addr is an interface (golang.org/pkg/net/#Addr) that implements two methods.
-
-	type MockAddr struct {
-		Net, Addr string
-	}
-
-	func (m MockAddr) Network() string { return m.Net  }
-	func (m MockAddr) String()  string { return m.Addr }
-
-* Faking a network connection
-
-- A network connection (net.Conn) is an interface (golang.org/pkg/net/#Conn)
-
-	type MockConn struct {
-		LocalNet, LocalAddr   string        // Local address
-		RemoteNet, RemoteAddr string        // Remote address
-		Incoming, Outgoing    *bytes.Buffer // Read/write buffers
-	}
-
-	func (c Conn) LocalAddr() net.Addr {
-		return &MockAddr{c.LocalNetwork, c.LocalAddress}
-	}
-
-	func (c Conn) RemoteAddr() net.Addr {
-		return &MockAddr{c.RemoteNetwork, c.RemoteAddress}
-	}
-
-	func (c *Conn) Read (b []byte) (n int, err error) { return c.Outgoing.Read(b)  }
-	func (c *Conn) Write(b []byte) (n int, err error) { return c.Incoming.Write(b) }
-
-	func (c Conn) Close() error                       { return nil }
-	func (c Conn) SetDeadline(t time.Time) error      { return nil }
-	func (c Conn) SetReadDeadline(t time.Time) error  { return nil }
-	func (c Conn) SetWriteDeadline(t time.Time) error { return nil }
 
 * Ensuring interfaces are implemented
 
