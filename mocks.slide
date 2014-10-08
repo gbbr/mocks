@@ -51,6 +51,12 @@ Central pivot of the mail exchange server. Queues, retrieves and delivers messag
 		Query(addr *mail.Address) QueryStatus
 	}
 
+* Multiple implementations
+
+- PostBox - PostgreSQL implementation
+- RedBox - Redis implementation
+- MongoBox - MongoDB implementation
+
 * Mocking a mailbox
 
 	type MockMailbox struct {
@@ -69,12 +75,6 @@ Central pivot of the mail exchange server. Queues, retrieves and delivers messag
 	func (m *MockMailbox) Deliver(msg *mail.Message, addr *mail.Address) error {
 		return m.DeliverFn(msg, addr)
 	}
-
-* Multiple implementations
-
-- PostBox - PostgreSQL implementation
-- RedBox - Redis implementation
-- MongoBox - MongoDB implementation
 
 * Faking a network address
 
