@@ -62,7 +62,7 @@ Central pivot of the mail exchange server. Queues, retrieves and delivers messag
 	func (m *MockMailbox) Query(addr *mail.Address) QueryStatus { return m.QueryMock(addr)   }
 
 	func (m *MockMailbox) Deliver(msg *mail.Message, addr *mail.Address) error {
-		return m.DeliverFn(msg, addr)
+		return m.DeliverMock(msg, addr)
 	}
 
 * Simple example
@@ -77,7 +77,7 @@ Test
 		called := false
 
 		mock := &MockMailbox{
-			QueueFn: func(*mail.Message) error {
+			QueueMock: func(*mail.Message) error {
 				called = true
 				return nil
 			}
