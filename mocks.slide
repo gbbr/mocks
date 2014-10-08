@@ -90,14 +90,6 @@ Test
 		}
 	}
 
-* Ensuring interfaces are implemented
-
-	var (
-		_ Mailbox = new(MockMailbox)
-		_ net.Conn = new(MockConn)
-		_ net.Addr = new(MockAddr)
-	)
-
 * Tips & Tricks
 
 Generate a coverage output:
