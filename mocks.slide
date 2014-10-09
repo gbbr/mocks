@@ -11,7 +11,7 @@ http://github.com/gbbr
 
 gabriel.aszalos@gmail.com
 
-* Mailing exchange server (Gomez)
+* Mail Exchange Server (Gomez)
 
 - SMTP receives mail
 - MTA (Mail Transfer Agent) delivers mail
@@ -65,7 +65,7 @@ Central pivot of the mail exchange server. Queues, retrieves and delivers messag
 		return m.DeliverMock(msg, addr)
 	}
 
-* Simple example
+* Basic example
 
 	func SaveMessage(mb Mailbox, msg *mail.Message) error {
 		return mb.Queue(msg)	
@@ -80,7 +80,7 @@ Test
 			QueueMock: func(*mail.Message) error {
 				called = true
 				return nil
-			}
+			},
 		}
 
 		SaveMessage(mock, &mail.Message{})
@@ -90,7 +90,7 @@ Test
 		}
 	}
 
-* Tips & Tricks
+* Makes me a happy gopher
 
 Generate a coverage output:
 
