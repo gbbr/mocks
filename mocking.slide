@@ -84,6 +84,19 @@ Test
 		}
 	}
 
+* Testing error handlers
+
+	func GetIP(client net.Conn) (string, error) {
+		var remoteAddress net.Addr = client.conn.RemoteAddr()
+
+		ip, _, err := net.SplitHostPort(remoteAddress.String())
+		if err != nil {
+			return "", err
+		}
+
+		return ip
+	}
+
 * Faking it
 
 - net.Addr is an interface (golang.org/pkg/net/#Addr) that implements two methods.
