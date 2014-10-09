@@ -1,0 +1,119 @@
+
+Mocking in Go: Using interfaces for fun and profits
+
+10 Oct 2014
+
+Gabriel Aszalos
+Gopher, Freelancer
+
+@gabrielaszalos
+http://github.com/gbbr
+
+gabriel.aszalos@gmail.com
+
+* Mail Exchange Server (Gomez)
+
+- SMTP receives mail
+- MTA (Mail Transfer Agent) delivers mail
+- POP3 retrieves mail
+- _Optional_: JSON API
+- _Optional_: CLI
+
+* Mailbox
+
+Central pivot of the mail exchange server. Queues, retrieves and delivers messages to local inboxes.
+
+	type Mailbox interface {
+		// Queues a message for delivery
+		Queue(msg *mail.Message) error
+
+		// Retrieve a message from the top of the queue
+		Dequeue() (*mail.Message, error)
+
+		// Delivers a message to a users inbox
+		Deliver(msg *mail.Message, addr *mail.Address) error
+
+		// Retrieves a user’s messages
+		Retrieve(usr User) []*mail.Message
+
+		// Queries the mailbox for a user
+		Query(addr *mail.Address) QueryStatus
+	}
+
+* Mocking a mailbox
+
+	type MockMailbox struct {
+		QueueMock    func(msg *mail.Message) error
+		DequeueMock  func() (*mail.Message, error)
+		DeliverMock  func(msg *mail.Message, addr *mail.Address) error
+		RetrieveMock func(usr User) []*mail.Message
+		QueryMock    func(addr *mail.Address) QueryStatus
+	}
+
+	func (m *MockMailbox) Queue(msg *mail.Message) error        { return m.QueueMock(msg)    }
+	func (m *MockMailbox) Dequeue() (*mail.Message, error)      { return m.DequeueMock()     }
+	func (m *MockMailbox) Retrieve(usr User) []*mailMessage     { return m.RetrieveMock(usr) }
+	func (m *MockMailbox) Query(addr *mail.Address) QueryStatus { return m.QueryMock(addr)   }
+
+	func (m *MockMailbox) Deliver(msg *mail.Message, addr *mail.Address) error {
+		return m.DeliverMock(msg, addr)
+	}
+
+* Basic example
+
+	func SaveMessage(mb Mailbox, msg *mail.Message) error {
+		return mb.Queue(msg)	
+	}
+
+Test
+
+	func Test_Save_Message(t *testing.T) {
+		called := false
+
+		mock := &MockMailbox{
+			QueueMock: func(*mail.Message) error {
+				called = true
+				return nil
+			},
+		}
+
+		SaveMessage(mock, &mail.Message{})
+
+		if !called {
+			t.Error("Did not call mailbox's Queue")
+		}
+	}
+
+* Faking it
+
+- net.Addr is an interface (golang.org/pkg/net/#Addr) that implements two methods.
+
+	type MockAddr struct {
+		Net, Addr string
+	}
+
+	func (m MockAddr) Network() string { return m.Net  }
+	func (m MockAddr) String()  string { return m.Addr }
+
+* Mocking a network connection
+
+- A network connection (net.Conn) is an interface (golang.org/pkg/net/#Conn)
+
+	type MockConn struct {
+		LocalNet, LocalAddr   string        // Local address
+		RemoteNet, RemoteAddr string        // Remote address
+		Incoming, Outgoing    *bytes.Buffer // Read/write buffers
+	}
+
+	func (c Conn) LocalAddr() net.Addr {
+		return &MockAddr{c.LocalNetwork, c.LocalAddress}
+	}
+
+	func (c Conn) RemoteAddr() net.Addr {
+		return &MockAddr{c.RemoteNetwork, c.RemoteAddress}
+	}
+
+	func (c *Conn) Read (b []byte) (n int, err error) { return c.Outgoing.Read(b)  }
+	func (c *Conn) Write(b []byte) (n int, err error) { return c.Incoming.Write(b) }
+	
+	// ...
