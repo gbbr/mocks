@@ -1,6 +1,6 @@
 ## Go Mocks
 
-A collection of mocks for testing Go applications.
+A collection of mocks for testing Go applications. This was built as a necessity for [Gomez, my Mail Exchange Server](https://github.com/gbbr/gomez) to test Reverse Lookup success and failure.
 
 ### Usage
 
