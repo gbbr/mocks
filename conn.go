@@ -2,6 +2,7 @@ package mocks
 
 import (
 	"bytes"
+	"io"
 	"net"
 	"time"
 )
@@ -17,7 +18,7 @@ type Conn struct {
 	Incoming bytes.Buffer
 
 	// Outgoing messages will be read from this buffer
-	Outgoing *bytes.Buffer
+	Outgoing io.Reader
 }
 
 func (c *Conn) Read(b []byte) (n int, err error) {
