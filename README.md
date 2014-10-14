@@ -48,7 +48,7 @@ type Conn struct {
 	Incoming bytes.Buffer
 
 	// Outgoing messages will be read from this buffer
-	Outgoing *bytes.Buffer
+	Outgoing io.Reader
 }
 ```
 
