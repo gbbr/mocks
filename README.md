@@ -1,6 +1,6 @@
 ## Go Mocks
 
-A collection of mocks for testing Go applications.
+A collection of mocks for testing Go applications. This was built as a necessity for [Gomez](https://github.com/gbbr/gomez), my Mail Exchange Server, to test Reverse Lookup success and failure.
 
 ### Usage
 
@@ -48,7 +48,7 @@ type Conn struct {
 	Incoming bytes.Buffer
 
 	// Outgoing messages will be read from this buffer
-	Outgoing *bytes.Buffer
+	Outgoing io.Reader
 }
 ```
 

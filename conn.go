@@ -2,10 +2,12 @@ package mocks
 
 import (
 	"bytes"
+	"io"
 	"net"
 	"time"
 )
 
+// Mocks a network connection. Implements the net.Conn interface
 type Conn struct {
 	// Local network & address for the connection
 	LocalNetwork, LocalAddress string
@@ -17,7 +19,7 @@ type Conn struct {
 	Incoming bytes.Buffer
 
 	// Outgoing messages will be read from this buffer
-	Outgoing *bytes.Buffer
+	Outgoing io.Reader
 }
 
 func (c *Conn) Read(b []byte) (n int, err error) {

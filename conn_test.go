@@ -47,8 +47,8 @@ func Test_Conn_Textproto(t *testing.T) {
 		t.Error("Could not write to connection.")
 	}
 
-	received, err := conn.Incoming.ReadString('!')
-	if received != "Hello world!" {
+	received := conn.Incoming.String()
+	if received != "Hello world!\r\n" {
 		t.Errorf("Expected 'Hello world!', got: '%s'", received)
 	}
 }
