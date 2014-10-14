@@ -5,22 +5,17 @@ Mocking in Go: Using interfaces for fun and profits
 
 Gabriel Aszalos
 Gopher, Freelancer
+
 @gabrielaszalos
-gabriel.aszalos@gmail.com
 http://github.com/gbbr
+
+gabriel.aszalos@gmail.com
 
 * Makes me a happy gopher
 
 - Readability
-- Isolation & Decoupling
+- Testability
 - Efficiency
-
-* Benefits of focusing on testability
-
-- Scalability 
-- User Perspective
-- Code Coverage
-- Stability and Security
 
 * Mailing exchange server (Gomez)
 

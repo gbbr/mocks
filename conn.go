@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// Mocks a network connection. Implements the net.Conn interface
 type Conn struct {
 	// Local network & address for the connection
 	LocalNetwork, LocalAddress string
