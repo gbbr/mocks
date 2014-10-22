@@ -59,6 +59,19 @@ type Conn struct {
 }
 ```
 
+#### Mock a full duplex connection
+
+If you need to use `net.Pipe` from the [net package](golang.org/pkg/net/#Pipe), but need a remote and local address, you can use the Pipe method provided in this package by passing it to mock connections, and in turn it will return a full-duplex pipe.
+
+```go
+	c1, c2 := Pipe(
+		&Conn{RemoteAddress: "1.1.1.1:123"},
+		&Conn{RemoteAddress: "2.2.2.2:456"},
+	)
+```
+
+Refer to the [tests]() for a complete example.
+
 ### Considerations
 
 If you do not wish to to create the above examples (ie. you do not need to fake the remote/local address), you may also consider using the [pipe](http://golang.org/pkg/net/#Pipe) provided in the `net` package, which returns two ends of a network stream. _Careful though_, when using net.Pipe() and requesting LocalAddr() or RemoteAddr() nil pointer panic will happen.
