@@ -23,7 +23,7 @@ Mocking `net.Conn` has never been easier. Fake your Local & Remote IP address an
 
 To fake your address & protocol:
 
-```
+```go
 var conn net.Conn 
 var buf bytes.Buffer
 
@@ -46,7 +46,7 @@ fmt.Println(buf.String()) // Outputs: Message\n
 
 Using a `net/textproto` wrapper is as easy as:
 
-```
+```go
 var buf bytes.Buffer
 
 conn := &mock.Conn{Incoming: &buf}
