@@ -9,29 +9,36 @@ Mocking `net.Conn` has never been easier. Fake your Local & Remote IP address an
 To fake your address & protocol:
 
 ```
-var conn net.Conn = &mock.Conn{
+var conn net.Conn 
+var buf bytes.Buffer
+
+conn = &mock.Conn{
   LocalAddress: "1.2.3.4:567",
   LocalNetwork: "tcp",
   
   RemoteAddress: "some.addr:666",
   RemoteNetwork: "udp",
+
+  Incoming: &buf,
 }
 
 fmt.Println(conn.LocalAddr())            // 1.2.3.4:567
 fmt.Println(conn.RemoteAddr().Network()) // udp
 
 fmt.Fprintln(conn, "Message")
-fmt.Println(conn.Incoming.String()) // Outputs: Message\n
+fmt.Println(buf.String()) // Outputs: Message\n
 ```
 
 Using a `net/textproto` wrapper is as easy as:
 
 ```
-var conn net.Conn = new(mock.Conn)
-var text = textproto.NewConn(conn)
+var buf bytes.Buffer
+
+conn := &mock.Conn{Incoming: &buf}
+text := textproto.NewConn(conn)
 
 text.PrintfLine("Hello world!")
-fmt.Println(conn.Incoming.String()) // "Hello world!\r\n"
+fmt.Println(buf.String()) // "Hello world!\r\n"
 ```
 
 Check source code for more documentation. The mock interface is implemented as follows:
@@ -45,7 +52,7 @@ type Conn struct {
 	RemoteNetwork, RemoteAddress string
 
 	// Incoming messages will be written to this buffer
-	Incoming bytes.Buffer
+	Incoming io.Writer
 
 	// Outgoing messages will be read from this buffer
 	Outgoing io.Reader

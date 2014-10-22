@@ -1,7 +1,6 @@
 package mocks
 
 import (
-	"bytes"
 	"io"
 	"net"
 	"time"
@@ -16,7 +15,7 @@ type Conn struct {
 	RemoteNetwork, RemoteAddress string
 
 	// Incoming messages will be written to this buffer
-	Incoming bytes.Buffer
+	Incoming io.Writer
 
 	// Outgoing messages will be read from this buffer
 	Outgoing io.Reader
@@ -55,4 +54,19 @@ func (m Addr) Network() string {
 
 func (m Addr) String() string {
 	return m.Addr
+}
+
+// Pipe turns two mock connections into a full-duplex connection similar to net.Pipe
+// to allow pipe's with (fake) addresses.
+func Pipe(c1, c2 *Conn) (*Conn, *Conn) {
+	r1, w1 := io.Pipe()
+	r2, w2 := io.Pipe()
+
+	c1.Incoming = w1
+	c2.Outgoing = r1
+
+	c1.Outgoing = r2
+	c2.Incoming = w2
+
+	return c1, c2
 }
