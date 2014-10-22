@@ -70,7 +70,7 @@ If you need to use `net.Pipe` from the [net package](golang.org/pkg/net/#Pipe), 
 	)
 ```
 
-Refer to the [tests]() for a complete example.
+Refer to the [tests](https://github.com/gbbr/mocks/blob/master/conn_test.go#L75) for a complete example.
 
 ### Considerations
 
