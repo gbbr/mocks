@@ -4,6 +4,21 @@ A collection of mocks for testing Go applications. This was built as a necessity
 
 ### Usage
 
+#### Mock a full duplex connection
+
+If you need to use `net.Pipe` from the [net package](golang.org/pkg/net/#Pipe), but need a remote and local address, you can use the Pipe method provided in this package by passing it to mock connections, and in turn it will return a full-duplex pipe.
+
+```go
+	c1, c2 := Pipe(
+		&Conn{RemoteAddress: "1.1.1.1:123"},
+		&Conn{RemoteAddress: "2.2.2.2:456"},
+	)
+```
+
+Refer to the [tests](https://github.com/gbbr/mocks/blob/master/conn_test.go#L75) for a complete example.
+
+#### Mocking net.Conn
+
 Mocking `net.Conn` has never been easier. Fake your Local & Remote IP address and protocol, channel incoming and outgoing stream of data as desired.
 
 To fake your address & protocol:
@@ -58,19 +73,6 @@ type Conn struct {
 	Outgoing io.Reader
 }
 ```
-
-#### Mock a full duplex connection
-
-If you need to use `net.Pipe` from the [net package](golang.org/pkg/net/#Pipe), but need a remote and local address, you can use the Pipe method provided in this package by passing it to mock connections, and in turn it will return a full-duplex pipe.
-
-```go
-	c1, c2 := Pipe(
-		&Conn{RemoteAddress: "1.1.1.1:123"},
-		&Conn{RemoteAddress: "2.2.2.2:456"},
-	)
-```
-
-Refer to the [tests](https://github.com/gbbr/mocks/blob/master/conn_test.go#L75) for a complete example.
 
 ### Considerations
 
