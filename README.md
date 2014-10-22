@@ -6,7 +6,7 @@ A collection of mocks for testing Go applications. This was built as a necessity
 
 #### Mock a full duplex connection
 
-If you need to use `net.Pipe` from the [net package](http://golang.org/pkg/net/#Pipe), but need a remote and local address, you can use the Pipe method provided in this package by passing it to mock connections, and in turn it will return a full-duplex pipe.
+If you need to use `net.Pipe` from the [net package](http://golang.org/pkg/net/#Pipe), but need a remote and local address, you can use the Pipe method provided in this package by passing it two mock connections, and in turn it will return a full-duplex pipe.
 
 ```go
 	c1, c2 := Pipe(
