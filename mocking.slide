@@ -40,12 +40,6 @@ Central pivot of the mail exchange server. Queues, retrieves and delivers messag
 		Query(addr *mail.Address) QueryStatus
 	}
 
-* Multiple implementations
-
-- PostBox - PostgreSQL implementation
-- RedBox - Redis implementation
-- MongoBox - MongoDB implementation
-
 * Mocking a mailbox
 
 	type MockMailbox struct {
@@ -90,16 +84,49 @@ Test
 		}
 	}
 
-* Makes me a happy gopher
+* Testing error handlers
 
-Generate a coverage output:
+	func Host(client net.Conn) (string, error) {
+		var remoteAddress net.Addr = client.RemoteAddr()
 
-	$ go test -coverprofile=cov.out [package]
+		host, _, err := net.SplitHostPort(remoteAddress.String())
+		if err != nil {
+			return "", err
+		}
 
-Generate a heat-map output:
+		return host, nil
+	}
 
-	$ go test -covermode=count -coverprofile=cov.out [package]
+* Faking it
 
-View a coverage file:
+- net.Addr is an interface (golang.org/pkg/net/#Addr) that implements two methods.
 
-	$ go tool cover -html=cov.out
+	type MockAddr struct {
+		Net, Addr string
+	}
+
+	func (m MockAddr) Network() string { return m.Net  }
+	func (m MockAddr) String()  string { return m.Addr }
+
+* Mocking a network connection
+
+- A network connection (net.Conn) is an interface (golang.org/pkg/net/#Conn)
+
+	type MockConn struct {
+		LocalNet, LocalAddr   string        // Local address
+		RemoteNet, RemoteAddr string        // Remote address
+		Incoming, Outgoing    *bytes.Buffer // Read/write buffers
+	}
+
+	func (c Conn) LocalAddr() net.Addr {
+		return &MockAddr{c.LocalNetwork, c.LocalAddress}
+	}
+
+	func (c Conn) RemoteAddr() net.Addr {
+		return &MockAddr{c.RemoteNetwork, c.RemoteAddress}
+	}
+
+	func (c *Conn) Read (b []byte) (n int, err error) { return c.Outgoing.Read(b)  }
+	func (c *Conn) Write(b []byte) (n int, err error) { return c.Incoming.Write(b) }
+	
+	// ...

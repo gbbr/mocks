@@ -16,12 +16,15 @@ func Test_Interface_Is_Implemented(t *testing.T) {
 }
 
 func Test_Conn_Incoming_Buffer(t *testing.T) {
-	mockConn := new(Conn)
-	fmt.Fprintln(mockConn, "Test Message")
+	var buf bytes.Buffer
 
-	contents := mockConn.Incoming.String()
+	mockConn := &Conn{Incoming: &buf}
+
+	fmt.Fprintln(mockConn, "Test Message")
+	contents := buf.String()
+
 	if contents != "Test Message\n" {
-		t.Errorf("Expected 'Test Message' but got: '%s'", mockConn.Incoming.String())
+		t.Errorf("Expected 'Test Message' but got: '%s'", buf.String())
 	}
 }
 
@@ -39,7 +42,8 @@ func Test_Conn_Outgoing_Buffer(t *testing.T) {
 }
 
 func Test_Conn_Textproto(t *testing.T) {
-	conn := &Conn{}
+	var buf bytes.Buffer
+	conn := &Conn{Incoming: &buf}
 	text := textproto.NewConn(conn)
 
 	err := text.PrintfLine("Hello world!")
@@ -47,7 +51,7 @@ func Test_Conn_Textproto(t *testing.T) {
 		t.Error("Could not write to connection.")
 	}
 
-	received := conn.Incoming.String()
+	received := buf.String()
 	if received != "Hello world!\r\n" {
 		t.Errorf("Expected 'Hello world!', got: '%s'", received)
 	}
@@ -64,5 +68,47 @@ func Test_Conn_Addresses(t *testing.T) {
 	if conn.LocalAddr().String() != "addr1" || conn.RemoteAddr().String() != "addr2" ||
 		conn.LocalAddr().Network() != "net1" || conn.RemoteAddr().Network() != "net2" {
 		t.Errorf("Did not mock addresses correctly")
+	}
+}
+
+func Test_Pipe(t *testing.T) {
+	c1, c2 := Pipe(
+		&Conn{
+			RemoteAddress: "1.1.1.1:123",
+		},
+		&Conn{
+			RemoteAddress: "2.2.2.2:456",
+		},
+	)
+
+	go func() {
+		c1.Write([]byte("Hello"))
+	}()
+
+	b := make([]byte, 5)
+	n, err := c2.Read(b)
+	if err != nil {
+		t.Errorf("Could not read c2: %s", err)
+	}
+
+	if string(b) != "Hello" || n != 5 {
+		t.Errorf("Pipe to c2 did not work, got %d bytes of '%s'", n, b)
+	}
+
+	if c1.RemoteAddr().String() != "1.1.1.1:123" || c2.RemoteAddr().String() != "2.2.2.2:456" {
+		t.Error("Did not mock addresses correctly.")
+	}
+
+	go func() {
+		c2.Write([]byte("Jumbo"))
+	}()
+
+	n, err = c1.Read(b)
+	if err != nil {
+		t.Errorf("Could not read c1: %s", err)
+	}
+
+	if string(b) != "Jumbo" || n != 5 {
+		t.Errorf("Pipe to c2 did not work, got %d bytes of '%s'", n, b)
 	}
 }
