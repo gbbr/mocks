@@ -3,6 +3,7 @@ package mocks
 import (
 	"io"
 	"net"
+	"syscall"
 	"time"
 )
 
@@ -19,13 +20,23 @@ type Conn struct {
 
 	// Outgoing messages will be read from this buffer
 	Outgoing io.Reader
+
+	closed bool
 }
 
 func (c *Conn) Read(b []byte) (n int, err error) {
+	if c.closed {
+		return 0, syscall.EINVAL
+	}
+
 	return c.Outgoing.Read(b)
 }
 
 func (c *Conn) Write(b []byte) (n int, err error) {
+	if c.closed {
+		return 0, syscall.EINVAL
+	}
+
 	return c.Incoming.Write(b)
 }
 
@@ -37,8 +48,12 @@ func (c Conn) RemoteAddr() net.Addr {
 	return &Addr{c.RemoteNetwork, c.RemoteAddress}
 }
 
+func (c *Conn) Close() error {
+	c.closed = true
+	return nil
+}
+
 // Not implemented
-func (c Conn) Close() error                       { return nil }
 func (c Conn) SetDeadline(t time.Time) error      { return nil }
 func (c Conn) SetReadDeadline(t time.Time) error  { return nil }
 func (c Conn) SetWriteDeadline(t time.Time) error { return nil }
