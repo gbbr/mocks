@@ -26,7 +26,7 @@ To fake your address & protocol:
 ```go
 var (
 	conn net.Conn 
-	buf bytes.Buffer
+	buf  bytes.Buffer
 )
 
 conn = &mock.Conn{
