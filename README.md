@@ -24,17 +24,19 @@ Mocking `net.Conn` has never been easier. Fake your Local & Remote IP address an
 To fake your address & protocol:
 
 ```go
-var conn net.Conn 
-var buf bytes.Buffer
+var (
+	conn net.Conn 
+	buf bytes.Buffer
+)
 
 conn = &mock.Conn{
-  LocalAddress: "1.2.3.4:567",
-  LocalNetwork: "tcp",
+	LocalAddress: "1.2.3.4:567",
+	LocalNetwork: "tcp",
   
-  RemoteAddress: "some.addr:666",
-  RemoteNetwork: "udp",
+	RemoteAddress: "some.addr:666",
+	RemoteNetwork: "udp",
 
-  Incoming: &buf,
+	Incoming: &buf,
 }
 
 fmt.Println(conn.LocalAddr())            // 1.2.3.4:567
