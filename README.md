@@ -54,10 +54,25 @@ it on the other one. This functionality is similar to [net.Pipe](http://golang.o
 additionally allows the mocking of addresses of each end using the connection from this package.
 
 ```go
-	c1, c2 := Pipe(
-		&Conn{RAddr: "1.1.1.1:123"},
-		&Conn{LAddr: "127.0.0.1:12", RAddr: "2.2.2.2:456"},
-	)
+c1, c2 := Pipe(
+	&Conn{RAddr: "1.1.1.1:123"},
+	&Conn{LAddr: "127.0.0.1:12", RAddr: "2.2.2.2:456"},
+)
+
+// Go routine writes to connection 1
+go func() {
+	c1.Write([]byte("Hello"))
+}()
+
+b := make([]byte, 5)
+
+// Connection 2 receives message
+n, err := c2.Read(b)
+if err != nil {
+	t.Errorf("Could not read c2: %s", err)
+}
+
+fmt.Println(string(b)) // outputs "Hello"
 ```
 
 Refer to the [tests](https://github.com/gbbr/mocks/blob/master/conn_test.go#L75) for a complete example.
