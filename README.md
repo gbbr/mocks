@@ -28,19 +28,20 @@ The view data that was sent to the mock connection, configure the `In` io.Writer
 interface of mocks.Conn, like:
 
 ```go
-var buf bytes.Buffer
 mockConn.In = &buf
 
+var buf bytes.Buffer
 fmt.Fprintf(mockConn, "Message")
+
 fmt.Println(buf.String()) // prints "Message"
 ```
 
 To set a data source for the network connection the `Out` io.Reader may be used as follows:
 
 ```go
-var msg string
-
 mockConn.Out = bytes.NewBuffer([]byte("Test\n"))
+
+var msg string
 fmt.Scanln(mockConn, &msg)
 
 fmt.Println(msg) // outputs "Test"
