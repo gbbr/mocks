@@ -60,9 +60,7 @@ c1, c2 := Pipe(
 )
 
 // Go routine writes to connection 1
-go func() {
-	c1.Write([]byte("Hello"))
-}()
+go c1.Write([]byte("Hello"))
 
 b := make([]byte, 5)
 

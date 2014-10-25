@@ -81,9 +81,7 @@ func Test_Pipe(t *testing.T) {
 		},
 	)
 
-	go func() {
-		c1.Write([]byte("Hello"))
-	}()
+	go c1.Write([]byte("Hello"))
 
 	b := make([]byte, 5)
 	n, err := c2.Read(b)
@@ -99,9 +97,7 @@ func Test_Pipe(t *testing.T) {
 		t.Error("Did not mock addresses correctly.")
 	}
 
-	go func() {
-		c2.Write([]byte("Jumbo"))
-	}()
+	go c2.Write([]byte("Jumbo"))
 
 	n, err = c1.Read(b)
 	if err != nil {
