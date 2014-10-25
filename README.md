@@ -1,80 +1,66 @@
-## Go Mocks
+## Mocks
 
-A collection of mocks for testing Go applications. This was built as a necessity for [Gomez](https://github.com/gbbr/gomez), my Mail Exchange Server, to test Reverse Lookup success and failure.
+Mocks is a small package that provides mocks to help with testing network applications.
 
-### Usage
+#### Mocking a network connection
 
-#### Mock a full duplex connection
+To mock the `net.Conn` interface, import `github.com/gbbr/mocks` into your package
+and use a configured mock structure, such as:
 
-If you need to use `net.Pipe` from the [net package](http://golang.org/pkg/net/#Pipe), but need a remote and local address, you can use the Pipe method provided in this package by passing it two mock connections, and in turn it will return a full-duplex pipe.
+```go
+var mockConn net.Conn
+
+mockConn = &mocks.Conn{
+	// Local address setup
+	LAddr: "127.0.0.1:888",
+	LNet:  "tcp",
+
+	// Remote address
+	RAddr: "10.18.20.21:123",
+	RNet: "udp",
+}
+
+fmt.Println(mockConn.LocalAddr().String()) // prints "127.0.0.1:888"
+fmt.Println(mockConn.RemoteAddr().String()) // prints "10.18.20.21:123"
+```
+
+The view data that was sent to the mock connection, configure the `In` io.Writer
+interface of mocks.Conn, like:
+
+```go
+var buf bytes.Buffer
+mockConn.In = &buf
+
+fmt.Fprintf(mockConn, "Message")
+fmt.Println(buf.String()) // prints "Message"
+```
+
+To set a data source for the network connection the `Out` io.Reader may be used as follows:
+
+```go
+var msg string
+
+mockConn.Out = bytes.NewBuffer([]byte("Test\n"))
+fmt.Scanln(mockConn, &msg)
+
+fmt.Println(msg) // outputs "Test"
+```
+
+
+#### Obtaining a full communication channel
+
+Pipe returns a full duplex network connection that receives data on either end and outputs
+it on the other one. This functionality is similar to [net.Pipe](http://golang.org/pkg/net/#Pipe), but
+additionally allows the mocking of addresses of each end using the connection from this package.
 
 ```go
 	c1, c2 := Pipe(
-		&Conn{RemoteAddress: "1.1.1.1:123"},
-		&Conn{RemoteAddress: "2.2.2.2:456"},
+		&Conn{RAddr: "1.1.1.1:123"},
+		&Conn{LAddr: "127.0.0.1:12", RAddr: "2.2.2.2:456"},
 	)
 ```
 
 Refer to the [tests](https://github.com/gbbr/mocks/blob/master/conn_test.go#L75) for a complete example.
-
-#### Mocking net.Conn
-
-Mocking `net.Conn` has never been easier. Fake your Local & Remote IP address and protocol, channel incoming and outgoing stream of data as desired.
-
-To fake your address & protocol:
-
-```go
-var (
-	conn net.Conn 
-	buf  bytes.Buffer
-)
-
-conn = &mock.Conn{
-	LocalAddress: "1.2.3.4:567",
-	LocalNetwork: "tcp",
-  
-	RemoteAddress: "some.addr:666",
-	RemoteNetwork: "udp",
-
-	Incoming: &buf,
-}
-
-fmt.Println(conn.LocalAddr())            // 1.2.3.4:567
-fmt.Println(conn.RemoteAddr().Network()) // udp
-
-fmt.Fprintln(conn, "Message")
-fmt.Println(buf.String()) // Outputs: Message\n
-```
-
-Using a `net/textproto` wrapper is as easy as:
-
-```go
-var buf bytes.Buffer
-
-conn := &mock.Conn{Incoming: &buf}
-text := textproto.NewConn(conn)
-
-text.PrintfLine("Hello world!")
-fmt.Println(buf.String()) // "Hello world!\r\n"
-```
-
-Check source code for more documentation. The mock interface is implemented as follows:
-
-```go
-type Conn struct {
-	// Local network & address for the connection
-	LocalNetwork, LocalAddress string
-
-	// Remote network & address for the connection
-	RemoteNetwork, RemoteAddress string
-
-	// Incoming messages will be written to this buffer
-	Incoming io.Writer
-
-	// Outgoing messages will be read from this buffer
-	Outgoing io.Reader
-}
-```
 
 ### Considerations
 
