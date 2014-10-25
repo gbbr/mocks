@@ -5,7 +5,7 @@ Mocks is a small package that helps with testing network applications.
 #### Mocking a network connection
 
 To mock the `net.Conn` interface, import `github.com/gbbr/mocks` into your package
-and use a configured mock structure, such as:
+and use a configured Conn structure, such as:
 
 ```go
 var mockConn net.Conn
