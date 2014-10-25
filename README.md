@@ -1,6 +1,6 @@
 ## Mocks
 
-Mocks is a small package that provides mocks to help with testing network applications.
+Mocks is a small package that helps with testing network applications.
 
 #### Mocking a network connection
 
