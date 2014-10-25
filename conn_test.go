@@ -73,12 +73,8 @@ func Test_Conn_Addresses(t *testing.T) {
 
 func Test_Pipe(t *testing.T) {
 	c1, c2 := Pipe(
-		&Conn{
-			RAddr: "1.1.1.1:123",
-		},
-		&Conn{
-			RAddr: "2.2.2.2:456",
-		},
+		&Conn{RAddr: "1.1.1.1:123"},
+		&Conn{RAddr: "2.2.2.2:456"},
 	)
 
 	go c1.Write([]byte("Hello"))
