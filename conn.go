@@ -10,16 +10,16 @@ import (
 // Mocks a network connection. Implements the net.Conn interface
 type Conn struct {
 	// Local network & address for the connection
-	LocalNetwork, LocalAddress string
+	LNet, LAddr string
 
 	// Remote network & address for the connection
-	RemoteNetwork, RemoteAddress string
+	RNet, RAddr string
 
-	// Incoming messages will be written to this buffer
-	Incoming io.Writer
+	// In messages will be written to this buffer
+	In io.Writer
 
-	// Outgoing messages will be read from this buffer
-	Outgoing io.Reader
+	// Out messages will be read from this buffer
+	Out io.Reader
 
 	closed bool
 }
@@ -29,7 +29,7 @@ func (c *Conn) Read(b []byte) (n int, err error) {
 		return 0, syscall.EINVAL
 	}
 
-	return c.Outgoing.Read(b)
+	return c.Out.Read(b)
 }
 
 func (c *Conn) Write(b []byte) (n int, err error) {
@@ -37,15 +37,15 @@ func (c *Conn) Write(b []byte) (n int, err error) {
 		return 0, syscall.EINVAL
 	}
 
-	return c.Incoming.Write(b)
+	return c.In.Write(b)
 }
 
 func (c Conn) LocalAddr() net.Addr {
-	return &Addr{c.LocalNetwork, c.LocalAddress}
+	return &Addr{c.LNet, c.LAddr}
 }
 
 func (c Conn) RemoteAddr() net.Addr {
-	return &Addr{c.RemoteNetwork, c.RemoteAddress}
+	return &Addr{c.RNet, c.RAddr}
 }
 
 func (c *Conn) Close() error {
@@ -77,11 +77,11 @@ func Pipe(c1, c2 *Conn) (*Conn, *Conn) {
 	r1, w1 := io.Pipe()
 	r2, w2 := io.Pipe()
 
-	c1.Incoming = w1
-	c2.Outgoing = r1
+	c1.In = w1
+	c2.Out = r1
 
-	c1.Outgoing = r2
-	c2.Incoming = w2
+	c1.Out = r2
+	c2.In = w2
 
 	return c1, c2
 }

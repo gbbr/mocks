@@ -18,7 +18,7 @@ func Test_Interface_Is_Implemented(t *testing.T) {
 func Test_Conn_Incoming_Buffer(t *testing.T) {
 	var buf bytes.Buffer
 
-	mockConn := &Conn{Incoming: &buf}
+	mockConn := &Conn{In: &buf}
 
 	fmt.Fprintln(mockConn, "Test Message")
 	contents := buf.String()
@@ -31,7 +31,7 @@ func Test_Conn_Incoming_Buffer(t *testing.T) {
 func Test_Conn_Outgoing_Buffer(t *testing.T) {
 	var contents = new(string)
 	mockConn := &Conn{
-		Outgoing: bytes.NewBuffer([]byte("Test\n")),
+		Out: bytes.NewBuffer([]byte("Test\n")),
 	}
 
 	fmt.Fscanln(mockConn, contents)
@@ -43,7 +43,7 @@ func Test_Conn_Outgoing_Buffer(t *testing.T) {
 
 func Test_Conn_Textproto(t *testing.T) {
 	var buf bytes.Buffer
-	conn := &Conn{Incoming: &buf}
+	conn := &Conn{In: &buf}
 	text := textproto.NewConn(conn)
 
 	err := text.PrintfLine("Hello world!")
@@ -59,10 +59,10 @@ func Test_Conn_Textproto(t *testing.T) {
 
 func Test_Conn_Addresses(t *testing.T) {
 	var conn net.Conn = &Conn{
-		LocalNetwork:  "net1",
-		RemoteNetwork: "net2",
-		LocalAddress:  "addr1",
-		RemoteAddress: "addr2",
+		LNet:  "net1",
+		RNet:  "net2",
+		LAddr: "addr1",
+		RAddr: "addr2",
 	}
 
 	if conn.LocalAddr().String() != "addr1" || conn.RemoteAddr().String() != "addr2" ||
@@ -74,10 +74,10 @@ func Test_Conn_Addresses(t *testing.T) {
 func Test_Pipe(t *testing.T) {
 	c1, c2 := Pipe(
 		&Conn{
-			RemoteAddress: "1.1.1.1:123",
+			RAddr: "1.1.1.1:123",
 		},
 		&Conn{
-			RemoteAddress: "2.2.2.2:456",
+			RAddr: "2.2.2.2:456",
 		},
 	)
 
