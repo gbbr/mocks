@@ -50,8 +50,7 @@ fmt.Println(msg) // outputs "Test"
 #### Obtaining a full communication channel
 
 Pipe returns a full duplex network connection that receives data on either end and outputs
-it on the other one. This functionality is similar to [net.Pipe](http://golang.org/pkg/net/#Pipe), but
-additionally allows the mocking of addresses of each end using the connection from this package.
+it on the other one.
 
 ```go
 c1, c2 := Pipe(
