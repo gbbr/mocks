@@ -11,7 +11,7 @@ and use a configured Conn structure, such as:
 var mockConn net.Conn
 
 mockConn = &mocks.Conn{
-	// Local address setup
+	// Local address
 	LAddr: "127.0.0.1:888",
 	LNet:  "tcp",
 
