@@ -22,7 +22,6 @@ mockConn = &mocks.Conn{
 
 fmt.Println(mockConn.LocalAddr().String()) // prints "127.0.0.1:888"
 fmt.Println(mockConn.RemoteAddr().String()) // prints "10.18.20.21:123"
-
 ```
 
 The view data that was sent to the mock connection, configure the `In` io.Writer
@@ -30,7 +29,6 @@ interface of mocks.Conn, like:
 
 ```go
 var buf bytes.Buffer
-
 mockConn.In = &buf
 
 fmt.Fprintf(mockConn, "Message")
