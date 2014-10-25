@@ -62,6 +62,7 @@ c1, c2 := Pipe(
 // Go routine writes to connection 1
 go c1.Write([]byte("Hello"))
 
+// Read 5 bytes
 b := make([]byte, 5)
 
 // Connection 2 receives message
