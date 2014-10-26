@@ -28,9 +28,8 @@ The view data that was sent to the mock connection, configure the `In` io.Writer
 interface of mocks.Conn, like:
 
 ```go
-mockConn.In = &buf
-
 var buf bytes.Buffer
+mockConn.In = &buf
 fmt.Fprintf(mockConn, "Message")
 
 fmt.Println(buf.String()) // prints "Message"
