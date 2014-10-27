@@ -26,7 +26,6 @@ func (c *Conn) Read(b []byte) (n int, err error) {
 	if c.closed {
 		return 0, syscall.EINVAL
 	}
-
 	return c.Out.Read(b)
 }
 
@@ -34,7 +33,6 @@ func (c *Conn) Write(b []byte) (n int, err error) {
 	if c.closed {
 		return 0, syscall.EINVAL
 	}
-
 	return c.In.Write(b)
 }
 
