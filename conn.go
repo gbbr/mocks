@@ -11,13 +11,11 @@ import (
 type Conn struct {
 	// Local network & address for the connection
 	LNet, LAddr string
-
 	// Remote network & address for the connection
 	RNet, RAddr string
 
 	// In messages will be written to this buffer
 	In io.Writer
-
 	// Out messages will be read from this buffer
 	Out io.Reader
 
