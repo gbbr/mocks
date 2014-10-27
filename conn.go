@@ -61,13 +61,8 @@ type Addr struct {
 	Net, Addr string
 }
 
-func (m Addr) Network() string {
-	return m.Net
-}
-
-func (m Addr) String() string {
-	return m.Addr
-}
+func (m Addr) Network() string { return m.Net }
+func (m Addr) String() string  { return m.Addr }
 
 // Pipe turns two mock connections into a full-duplex connection similar to net.Pipe
 // to allow pipe's with (fake) addresses.
