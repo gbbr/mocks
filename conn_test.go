@@ -10,8 +10,8 @@ import (
 
 func Test_Interface_Is_Implemented(t *testing.T) {
 	var (
-		_ net.Conn = &Conn{}
-		_ net.Addr = &Addr{}
+		_ net.Conn = (*Conn)(nil)
+		_ net.Addr = (*Addr)(nil)
 	)
 }
 
