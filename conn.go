@@ -13,7 +13,6 @@ type Conn struct {
 	LNet, LAddr string
 	// Remote network & address for the connection
 	RNet, RAddr string
-
 	// In messages will be written to this buffer
 	In io.Writer
 	// Out messages will be read from this buffer
@@ -67,10 +66,8 @@ func (m Addr) String() string  { return m.Addr }
 func Pipe(c1, c2 *Conn) (*Conn, *Conn) {
 	r1, w1 := io.Pipe()
 	r2, w2 := io.Pipe()
-
 	c1.In = w1
 	c2.Out = r1
-
 	c1.Out = r2
 	c2.In = w2
 
